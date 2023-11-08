@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dekappy/menu.dart';
+import 'package:dekappy/screens/menu.dart';
 
 void main() {
   runApp(const MyApp());
