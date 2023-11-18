@@ -1,7 +1,11 @@
+import 'package:dekappy/screens/list_product.dart';
+import 'package:dekappy/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:dekappy/widgets/left_drawer.dart';
 import 'package:dekappy/widgets/dekappy_card.dart';
 import 'package:dekappy/screens/dekappy_form.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 
 class MyHomePage extends StatelessWidget {
@@ -71,6 +75,7 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     Color cardColor; // Warna latar belakang card
 
     // Tentukan warna berdasarkan nama item
@@ -88,18 +93,41 @@ class ItemCard extends StatelessWidget {
       color: cardColor, // Atur warna latar belakang card
       child: InkWell(
         // Area responsive terhadap sentuhan
-        onTap: () {
-          // Memunculkan SnackBar ketika diklik
+        onTap: () async {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
                 content: Text("Kamu telah menekan tombol ${item.name}!")));
-                if (item.name == "Tambah Item") {
-                  // TODO: Gunakan Navigator.push untuk melakukan navigasi ke MaterialPageRoute yang mencakup ShopFormPage.
-                  Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ShopFormPage()));
-                }
+            // Navigate ke route yang sesuai (tergantung jenis tombol)
+            if (item.name == "Tambah Item") {
+              Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const ShopFormPage()));
+            } else if (item.name == "Lihat Item") {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const ProductPage()));
+            } else if (item.name == "Logout") {
+              final response = await request.logout(
+                  // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+                  "http://127.0.0.1:8000/auth/logout/");
+              String message = response["message"];
+              if (response['status']) {
+                String uname = response["username"];
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("$message Sampai jumpa, $uname."),
+                ));
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("$message"),
+                ));
+              }
+            }
+
         },
+        
         child: Container(
           // Container untuk menyimpan Icon dan Text
           padding: const EdgeInsets.all(8),
