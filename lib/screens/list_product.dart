@@ -5,7 +5,6 @@ import 'package:dekappy/models/product.dart';
 import 'package:dekappy/widgets/left_drawer.dart';
 import 'product_detail_page.dart';
 
-
 class ProductPage extends StatefulWidget {
   const ProductPage({Key? key}) : super(key: key);
 
@@ -71,12 +70,14 @@ class _ProductPageState extends State<ProductPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProductDetailPage(product: product),
+                              builder: (context) =>
+                                  ProductDetailPage(product: product),
                             ),
                           );
                         },
                         child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
                           padding: const EdgeInsets.all(20.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -99,7 +100,6 @@ class _ProductPageState extends State<ProductPage> {
                       );
                     },
                   );
-
                 }
               }
             }));
