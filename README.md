@@ -573,6 +573,39 @@ NPM    : 2206082480
    }
    ```
 
+   **--> Membuat model kustom sesuai dengan proyek aplikasi Django.**
+
+   Pada checklist ini, saya copy data JSON dan paste di Quicktype. Kemudian, saya membuat folder baru di dalam lib dengan nama models. Lalu, membuat file baru bernama ```product.dart``` dan paste kode yang sudah dicopy sebelumnya di file tersebut.
+
+   **--> Membuat halaman yang berisi daftar semua item yang terdapat pada endpoint JSON di Django yang telah kamu deploy.**
+
+   Pada checklist ini, saya membuat file baru bernama ```list_product.dart``` di dalam folder screens. Kemudian, saya mengisi file tersebut dengan kode berikut.
+   ```
+   class _ProductPageState extends State<ProductPage> {
+     Future<List<Product>> fetchProduct() async {
+       var url = Uri.parse('http://127.0.0.1:8000/json/');
+       var response = await http.get(
+         url,
+         headers: {"Content-Type": "application/json"},
+       );
+   
+       // melakukan decode response menjadi bentuk json
+       var data = jsonDecode(utf8.decode(response.bodyBytes));
+   
+       // melakukan konversi data json menjadi object Product
+       List<Product> list_product = [];
+       for (var d in data) {
+         if (d != null) {
+           list_product.add(Product.fromJson(d));
+         }
+       }
+       return list_product;
+     }
+   ```
+   
+
+   
+
    
    
 
