@@ -602,6 +602,130 @@ NPM    : 2206082480
        return list_product;
      }
    ```
+   Class tersebut berguna untuk memproses daftar produk dari JSON menjadi object Product.
+
+   ```
+     Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Product'),
+        ),
+        drawer: const LeftDrawer(),
+        body: FutureBuilder(
+            future: fetchProduct(),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.data == null) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                if (!snapshot.hasData) {
+                  return const Column(
+                    children: [
+                      Text(
+                        "Tidak ada data produk.",
+                        style:
+                            TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+                      ),
+                      SizedBox(height: 8),
+                    ],
+                  );
+                } else {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (_, index) {
+                      // Mengambil data produk saat ini
+                      var product = snapshot.data![index];
+
+                      return InkWell(
+                        onTap: () {
+                          // Navigasi ke halaman detail produk dengan data produk
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ProductDetailPage(product: product),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                product.fields.name,
+                                style: const TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text("${product.fields.price}"),
+                              const SizedBox(height: 10),
+                              Text("${product.fields.description}"),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+              }
+            }));
+        }
+      }
+   ```
+   Kode tersebut bertujuan untuk menampilkan name, amount, dan description dari masing-masing item yang ada dalam daftar item.
+
+   **--> Membuat halaman detail untuk setiap item yang terdapat pada halaman daftar Item.**
+
+   Pada checklist ini, saya membuat file baru bernama ```product_detail_page.dart``` di dalam folder screens. Kemudian, saya mengisi file tersebut dengan kode berikut
+
+   ```
+   
+   import 'package:flutter/material.dart';
+   import 'package:dekappy/models/product.dart';
+   
+   class ProductDetailPage extends StatelessWidget {
+     final Product product;
+   
+     const ProductDetailPage({Key? key, required this.product}) : super(key: key);
+   
+     @override
+     Widget build(BuildContext context) {
+       return Scaffold(
+         appBar: AppBar(
+           title: Text(product.fields.name),
+           actions: [
+             IconButton(
+               icon: Icon(Icons.arrow_back),
+               onPressed: () => Navigator.pop(context),
+             ),
+           ],
+         ),
+         body: Padding(
+           padding: EdgeInsets.all(16),
+           child: Column(
+             crossAxisAlignment: CrossAxisAlignment.start,
+             children: <Widget>[
+               Text("Name: ${product.fields.name}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+               SizedBox(height: 10),
+               Text("Price: ${product.fields.price}"),
+               SizedBox(height: 10),
+               Text("Items: ${product.fields.items}"),
+               SizedBox(height: 10),
+               Text("Description: ${product.fields.description}"),
+             ],
+           ),
+         ),
+       );
+     }
+   }
+   ```
+   
+
    
 
    
